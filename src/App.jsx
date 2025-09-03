@@ -12,9 +12,12 @@ function App() {
     const fd = new FormData(e.currentTarget);
     const data = Object.fromEntries(fd.entries());
     data.public = fd.has("public");
-    axios.post(url, data);
-    console.log(data)
-  }
+    axios.post(url, data)
+      .then(res => {
+        console.log("Risposta API:", res.data);
+      })
+
+  };
 
   return (
     <>
