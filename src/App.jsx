@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 
 const url = "https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts"
 
 
 function App() {
+  //useState 
 
   const [formData, setFormData] = useState({
     author: "",
@@ -13,6 +14,8 @@ function App() {
     body: "",
     public: false
   })
+  const [alert, setAlert] = useState({ show: false, variant: "success", text: "" });
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,6 +30,18 @@ function App() {
     axios.post(url, formData)
       .then(res => {
         console.log("Risposta API:", res.data);
+
+        setAlert({ show: true, variant: "success", text: "Post created successfully!" });
+
+        setFormData({
+          author: "",
+          title: "",
+          body: "",
+          public: false
+        });
+      })
+      .catch(err => {
+        setAlert({ show: true, variant: "danger", text: "Error while sending. Please try again." });
       });
   };
 
@@ -35,6 +50,20 @@ function App() {
     <>
       <div className="container">
         <h1>Enter a new post</h1>
+
+        {/* A L E R T  */}
+        {alert.show && (
+          <Alert
+            variant={alert.variant}
+            dismissible
+            onClose={() => setAlert(a => ({ ...a, show: false }))}
+            className="mt-3"
+          >
+            {alert.text}
+          </Alert>
+        )}
+
+        {/* F O R M  */}
         <Form onSubmit={handleSubmit}>
           {/* Campo Nome */}
           <Form.Group className="mb-3">
